@@ -1,6 +1,6 @@
 {
   "name": "common-schema",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "description": "Schema-handling utilities, including schema validators and checkers.",
   "main": "./lib/index.js",
@@ -14,7 +14,7 @@
   "dependencies": {
     "async": "^0.9.0",
     "objtools": "git+ssh://git@git.zipscene.com:zsapilibs/objtools.git#v0.0.10",
-    "zs-error": "git+ssh://git@git.zipscene.com:zsapicore/zs-error.git#v0.0.7",
+    "zs-error": "git+ssh://git@git.zipscene.com:zsapicore/zs-error.git#v0.0.8",
     "zs-jq-stub": "git+ssh://git@git.zipscene.com:zsapilibs/zs-jq-stub.git#v0.0.1",
     "zs-linter": "git+ssh://git@git.zipscene.com:zsapicore/zs-linter.git"
   },
