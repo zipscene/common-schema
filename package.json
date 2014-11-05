@@ -1,6 +1,6 @@
 {
   "name": "common-schema",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "private": true,
   "description": "Schema-handling utilities, including schema validators and checkers.",
   "main": "./lib/index.js",
