@@ -1,10 +1,8 @@
 node_modules
 .DS_Store
 tmp
-docs
 npm-debug.log
 bower_components
-dist
 Node_Framework.sublime-project
 Node_Framework.sublime-workspace
 project.sublime-project

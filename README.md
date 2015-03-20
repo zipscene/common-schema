@@ -1,4 +1,4 @@
-This is a zs-api library: common-schema
+# zs-common-schema
 
 Schema-handling utilities, including schema validators and checkers.
 

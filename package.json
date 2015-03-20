@@ -1,22 +1,44 @@
 {
-  "name": "common-schema",
-  "version": "1.0.8",
-  "private": true,
+  "name": "zs-common-schema",
+  "version": "0.0.1",
   "description": "Schema-handling utilities, including schema validators and checkers.",
-  "main": "./lib/index.js",
+  "main": "./dist/lib/index.js",
   "repository": {
     "type": "git",
-    "url": "git@git.zipscene.com:zsapilibs/common-schema.git"
+    "url": "git@git.zipscene.com:zsapilibs/zs-common-schema.git"
   },
   "scripts": {
-    "lint": "node node_modules/zs-linter/scripts/zslint"
+    "lint": "node ./node_modules/.bin/eslint . || exit 0",
+    "docs": "node ./node_modules/.bin/yuidoc .",
+    "test": "npm run-script build && node ./node_modules/.bin/mocha ./dist/test -R spec",
+    "build": "./node_modules/.bin/grunt build && rm -rf tmp",
+    "watch": "./node_modules/.bin/grunt watch && rm -rf tmp",
+    "prepublish": "npm run-script build && npm run-script docs"
   },
   "dependencies": {
-    "async": "^0.9.0",
-    "objtools": "git+ssh://git@git.zipscene.com:zsapilibs/objtools.git#v0.0.13",
-    "zs-error": "git+ssh://git@git.zipscene.com:zsapicore/zs-error.git#v0.0.11",
-    "zs-jq-stub": "git+ssh://git@git.zipscene.com:zsapilibs/zs-jq-stub.git#v0.0.2",
-    "zs-linter": "git+ssh://git@git.zipscene.com:zsapicore/zs-linter.git"
+    "babel-runtime": "^4.7.16",
+    "lodash": "^3.5.0",
+    "xerror": "^1.0.0",
+    "zs-objtools": "^0.3.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "broccoli": "^0.15.0",
+    "broccoli-babel-transpiler": "^4.0.1",
+    "broccoli-cli": "0.0.1",
+    "broccoli-merge-trees": "^0.2.1",
+    "broccoli-static-compiler": "^0.2.1",
+    "broccoli-wrap": "0.0.2",
+    "chai": "^2.1.2",
+    "es6-promise": "^2.0.1",
+    "eslint": "^0.17.1",
+    "grunt": "^0.4.5",
+    "grunt-broccoli": "^0.4.0",
+    "grunt-cli": "^0.1.13",
+    "mocha": "^2.2.1",
+    "source-map-support": "^0.2.10",
+    "yuidocjs": "^0.6.0"
+  },
+  "publishConfig": {
+    "registry": "https://npm.zipscene.com/"
+  }
 }
