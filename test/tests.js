@@ -91,6 +91,8 @@ describe('CommonSchema', function() {
 			expect(schema.normalize({ foo: 3, bar: 3 }, { allowUnknownFields: true }))
 				.to.deep.equal({ foo: '3', bar: 3 });
 			expect(schema.normalize({}, { allowMissingFields: true })).to.deep.equal({});
+			expect(schema.normalize({ foo: 3, bar: 3 }, { removeUnknownFields: true }))
+				.to.deep.equal({ foo: '3' });
 		});
 
 		it('array', function() {
@@ -102,6 +104,66 @@ describe('CommonSchema', function() {
 			});
 			expect(schema.normalize([ 2, 3 ])).to.deep.equal([ '2', '3' ]);
 			expect(() => schema.normalize({})).to.throw(ValidationError);
+		});
+
+		it('shorthand array', function() {
+			let schema = createSchema({
+				foo: [ {
+					bar: String
+				} ]
+			});
+			expect(schema.normalize({
+				foo: [
+					{
+						bar: 3
+					},
+					{
+						bar: 4
+					}
+				]
+			})).to.deep.equal({
+				foo: [
+					{
+						bar: '3'
+					},
+					{
+						bar: '4'
+					}
+				]
+			});
+		});
+
+		it('array empty elements', function() {
+			let schema = createSchema([ String ]);
+			expect(schema.normalize([])).to.deep.equal([]);
+			expect(schema.normalize([ 3 ])).to.deep.equal([ '3' ]);
+			expect( () => schema.normalize([ 3, undefined ]) ).to.throw(ValidationError);
+		});
+
+		it('map', function() {
+			let schema = createSchema({
+				type: 'map',
+				values: String
+			});
+			expect(schema.normalize({
+				foo: 5,
+				bar: 6,
+				baz: 7
+			})).to.deep.equal({
+				foo: '5',
+				bar: '6',
+				baz: '7'
+			});
+		});
+
+		it('defaults', function() {
+			let schema = createSchema({
+				foo: {
+					type: String,
+					default: 5
+				}
+			});
+			expect(schema.normalize({})).to.deep.equal({ foo: '5' });
 		});
 
 	});
