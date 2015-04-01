@@ -1,6 +1,7 @@
 let expect = require('chai').expect;
 let createSchema = require('../lib').createSchema;
 let ValidationError = require('../lib').ValidationError;
+let Mixed = require('../lib').Mixed;
 
 describe('CommonSchema', function() {
 
@@ -164,6 +165,70 @@ describe('CommonSchema', function() {
 				}
 			});
 			expect(schema.normalize({})).to.deep.equal({ foo: '5' });
+		});
+
+		it('number', function() {
+			let schema = createSchema({
+				type: Number,
+				min: 5,
+				max: 10,
+				minError: 'foobar'
+			});
+			expect(schema.normalize(5)).to.equal(5);
+			expect(schema.normalize(10)).to.equal(10);
+			expect(schema.normalize('6.5')).to.equal(6.5);
+			expect(() => schema.normalize('')).to.throw(ValidationError);
+			expect(() => schema.normalize('123a')).to.throw(ValidationError);
+			expect(() => schema.normalize(11)).to.throw(ValidationError);
+			expect(() => schema.normalize(4)).to.throw(ValidationError);
+			expect(() => schema.normalize(4)).to.throw('foobar');
+		});
+
+		it('date', function() {
+			let schema = createSchema({
+				type: Date,
+				min: new Date('2010-01-01T00:00:00Z'),
+				max: '2016-01-01T00:00:00Z',
+				default: Date.now
+			});
+			expect(schema.normalize(new Date('2014-01-01T00:00:00Z')).getTime())
+				.to.equal(new Date('2014-01-01T00:00:00Z').getTime());
+			expect(schema.normalize(1388534400000).getTime())
+				.to.equal(new Date('2014-01-01T00:00:00Z').getTime());
+			expect(schema.normalize('2014-01-01T00:00:00Z').getTime())
+				.to.equal(new Date('2014-01-01T00:00:00Z').getTime());
+			expect(schema.normalize(undefined).getTime())
+				.be.within(new Date().getTime() - 1000, new Date().getTime() + 1000);
+			expect(() => schema.normalize('2009-01-01T00:00:00Z')).to.throw(ValidationError);
+			expect(() => schema.normalize('2017-01-01T00:00:00Z')).to.throw(ValidationError);
+			expect(schema.serialize('2014-01-01T00:00:00Z'))
+				.to.equal('2014-01-01T00:00:00.000Z');
+		});
+
+		it('binary', function() {
+			let schema = createSchema(Buffer);
+			expect(schema.normalize('AQIDBAU=').toString('base64')).to.equal('AQIDBAU=');
+			expect(schema.normalize([ 1, 2, 3, 4, 5 ]).toString('base64')).to.equal('AQIDBAU=');
+			expect(schema.normalize(new Buffer([ 1, 2, 3, 4, 5 ])).toString('base64')).to.equal('AQIDBAU=');
+		});
+
+		it('boolean', function() {
+			let schema = createSchema(Boolean);
+			expect(schema.normalize(true)).to.equal(true);
+			expect(schema.normalize('false')).to.equal(false);
+			expect(schema.normalize(0)).to.equal(false);
+			expect( () => schema.normalize('zip') ).to.throw(ValidationError);
+		});
+
+		it('mixed', function() {
+			let schema = createSchema(Mixed);
+			let obj = {
+				foo: 12,
+				bar: {
+					baz: 'abc'
+				}
+			};
+			expect(schema.normalize(obj)).to.equal(obj);
 		});
 
 	});
