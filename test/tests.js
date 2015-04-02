@@ -3,6 +3,7 @@ let createSchema = require('../lib').createSchema;
 let ValidationError = require('../lib').ValidationError;
 let Mixed = require('../lib').Mixed;
 let or = require('../lib').or;
+let FieldError = require('../lib').FieldError;
 
 describe('CommonSchema', function() {
 
@@ -158,6 +159,21 @@ describe('CommonSchema', function() {
 			});
 		});
 
+		it('enum', function() {
+			let schema = createSchema({
+				type: String,
+				enum: [
+					'foo',
+					'bar',
+					'1'
+				]
+			});
+			expect(schema.normalize('foo')).to.equal('foo');
+			expect(schema.normalize('bar')).to.equal('bar');
+			expect(schema.normalize(1)).to.equal('1');
+			expect( () => schema.normalize('baz') ).to.throw(ValidationError);
+		});
+
 		it('or string/number', function() {
 			let schema = createSchema(or({}, String, Number));
 			expect(schema.normalize('abc')).to.equal('abc');
@@ -165,6 +181,73 @@ describe('CommonSchema', function() {
 			expect(schema.normalize('123')).to.equal('123');
 			expect(schema.normalize(true)).to.equal('true');
 			expect(schema.normalize({})).to.equal('[object Object]');
+		});
+
+		it('or without schema options', function() {
+			let schema = createSchema(or(String, Number));
+			expect(schema.normalize('abc')).to.equal('abc');
+			expect(schema.normalize(123)).to.equal(123);
+		});
+
+		it('or boolean/number', function() {
+			let schema = createSchema(or({}, Boolean, Number));
+			expect(schema.normalize(1)).to.equal(1);
+			expect(schema.normalize('1')).to.equal(true);
+			expect(schema.normalize('2')).to.equal(2);
+			expect(schema.normalize('true')).to.equal(true);
+			expect( () => schema.normalize('foo') ).to.throw(ValidationError);
+		});
+
+		it('or boolean/number/string', function() {
+			let schema = createSchema(or({}, Boolean, Number, String));
+			expect(schema.normalize(1)).to.equal(1);
+			expect(schema.normalize('1')).to.equal('1');
+			expect(schema.normalize('2')).to.equal('2');
+			expect(schema.normalize('true')).to.equal('true');
+			expect(schema.normalize(true)).to.equal(true);
+			expect(schema.normalize('foo')).to.equal('foo');
+		});
+
+		it('or string/object', function() {
+			let schema = createSchema(or({}, String, {
+				foo: {
+					type: Number,
+					required: true
+				},
+				bar: Number
+			}));
+			expect(schema.normalize({ foo: 123 })).to.deep.equal({ foo: 123 });
+			expect(schema.normalize({ foo: 1, bar: '123' })).to.deep.equal({ foo: 1, bar: 123 });
+			expect(schema.normalize(12)).to.equal('12');
+			expect( () => schema.normalize({ bar: 123 }) ).to.throw(ValidationError);
+		});
+
+		it('or object/object', function() {
+			let schema = createSchema(or({}, {
+				foo: {
+					bar: { type: String, required: true }
+				}
+			}, {
+				baz: {
+					qux: { type: String, required: true }
+				}
+			}));
+			expect(schema.normalize({ foo: { bar: 'bar' } })).to.deep.equal({ foo: { bar: 'bar' } });
+			expect(schema.normalize({ baz: { qux: 'qux' } })).to.deep.equal({ baz: { qux: 'qux' } });
+			expect( () => schema.normalize( { foo: {} }) ).to.throw(ValidationError);
+		});
+
+		it('or enums', function() {
+			let schema = createSchema(or({}, {
+				type: String,
+				enum: [ 'foo' ]
+			}, {
+				type: String,
+				enum: [ 'bar' ]
+			}));
+			expect(schema.normalize('foo')).to.equal('foo');
+			expect(schema.normalize('bar')).to.equal('bar');
+			expect( () => schema.normalize('qux') ).to.throw(ValidationError);
 		});
 
 		it('defaults', function() {
@@ -239,6 +322,23 @@ describe('CommonSchema', function() {
 				}
 			};
 			expect(schema.normalize(obj)).to.equal(obj);
+		});
+
+		it('custom normalizer and validator', function() {
+			let schema = createSchema({
+				type: String,
+				normalize: function(str) {
+					return str + 'x';
+				},
+				validate: function(str) {
+					if (str[0] !== 'a') {
+						throw new FieldError('invalid', 'Test validator');
+					}
+				}
+			});
+			expect(schema.normalize('afoo')).to.equal('afoox');
+			expect( () => schema.normalize('foo') ).to.throw(ValidationError);
+			expect( () => schema.normalize('foo') ).to.throw('Test validator');
 		});
 
 	});
