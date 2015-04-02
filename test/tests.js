@@ -69,6 +69,22 @@ describe('CommonSchema', function() {
 			expect(() => schema.normalize(3)).to.throw(ValidationError);
 		});
 
+		it('shorthand object type', function() {
+			let schema = createSchema({
+				type: {
+					foo: Number
+				}
+			});
+			expect(schema.normalize({ foo: '3' })).to.deep.equal({ foo: 3 });
+		});
+
+		it('shorthand array type', function() {
+			let schema = createSchema({
+				type: [ Number ]
+			});
+			expect(schema.normalize([ '3' ])).to.deep.equal([ 3 ]);
+		});
+
 		it('string errors', function() {
 			let schema = createSchema({
 				type: String,
