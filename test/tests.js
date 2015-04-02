@@ -2,6 +2,7 @@ let expect = require('chai').expect;
 let createSchema = require('../lib').createSchema;
 let ValidationError = require('../lib').ValidationError;
 let Mixed = require('../lib').Mixed;
+let or = require('../lib').or;
 
 describe('CommonSchema', function() {
 
@@ -155,6 +156,15 @@ describe('CommonSchema', function() {
 				bar: '6',
 				baz: '7'
 			});
+		});
+
+		it('or string/number', function() {
+			let schema = createSchema(or({}, String, Number));
+			expect(schema.normalize('abc')).to.equal('abc');
+			expect(schema.normalize(123)).to.equal(123);
+			expect(schema.normalize('123')).to.equal('123');
+			expect(schema.normalize(true)).to.equal('true');
+			expect(schema.normalize({})).to.equal('[object Object]');
 		});
 
 		it('defaults', function() {
