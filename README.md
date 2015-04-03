@@ -309,5 +309,53 @@ createSchema({
 })
 ```
 
+## Custom Validators and Normalizers
 
+You can specify custom validator and normalizer functions inside of a schema.  The validator
+should strictly validate the value, and is called after the normalizer when normalizing.  When
+normalizing, the defined normalized is called after the standard normalizer.
 
+Any validation errors should be reported by throwing a `FieldError`.
+
+```js
+createSchema({
+	foo: {
+		type: String,
+		validate: function(value, subschema, fieldPath, validateOptions) {
+			if (value[0] !== 'x') {
+				throw new commonSchema.FieldError('invalid', 'First character must be x');
+			}
+		},
+		normalize: function(value, subschema, fieldPath, normalizeOptions) {
+			return value.toLowerCase();
+		}
+	}
+})
+```
+
+## Other
+
+Functions are also provided for the following:
+
+- Traversing the schema
+- Traversing an object alongside the schema
+- Transforming an object while traversing
+- Transforming an object while traversing asynchronously
+
+See the `docs` directory for details.
+
+## Custom Types
+
+All schemas are created by a `SchemaFactory` that maintains the set of allowed types in the
+schema.  The exposed `createSchema` function is actually an alias to `createSchema` on a default
+factory.
+
+To create a custom type:
+
+1. Instantiate a new `SchemaFactory`.
+1. Subclass `SchemaType` or an existing type class, and override the appropriate methods.  See
+the default types for examples.
+1. Register the new type with the `SchemaFactory`.
+
+You can also use this process to override or extend existing types (for example, if you need to
+normalize a type into a different format for a specific database).
