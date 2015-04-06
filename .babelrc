@@ -24,7 +24,13 @@
 		"reactCompat",
 		"regenerator",
 		"es6.regex.sticky",
-		"es6.regex.unicode"
+		"es6.regex.unicode",
+		"es7.comprehensions",
+		"es7.classProperties",
+		"es7.decorators",
+		"es7.exportExtensions",
+		"es7.exponentiationOperator",
+		"es7.objectRestSpread"
 	],
 	"loose": [
 		"es6.properties.computed",
