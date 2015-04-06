@@ -213,10 +213,36 @@ values.  Ie, dates will output ISO8601 strings instead of native `Date` objects.
 An object with defined child properties.  Subschema should include a `properties` object, which
 is a map from property names to subschemas.
 
+```js
+createSchema({
+	type: 'object',
+	properties: {
+		foo: { type: 'string' },
+		bar: { type: 'string' }
+	}
+})
+// Shorthand
+createSchema({
+	foo: String,
+	bar: String
+})
+```
+
 ### `"array"`
 
 An array of elements that share the same schema.  Subschema should include an `elements`
 property which is the schema for array elements.
+
+```js
+createSchema({
+	type: 'array',
+	elements: {
+		type: 'number'
+	}
+})
+// Shorthand
+createSchema([ Number ])
+```
 
 ### `"map"`
 
@@ -225,7 +251,20 @@ subschema should include a `values` property which is the schema for the map val
 this:
 
 ```js
-let map = require('zs-common-schema');
+createSchema({
+	type: 'object',
+	properties: {
+		foo: {
+			type: 'map',
+			required: true,
+			values: {
+				type: 'number'
+			}
+		}
+	}
+})
+// Shorthand
+let map = require('zs-common-schema').map;
 createSchema({
 	// required field foo that's a map from strings to numbers
 	foo: map({
@@ -359,3 +398,30 @@ the default types for examples.
 
 You can also use this process to override or extend existing types (for example, if you need to
 normalize a type into a different format for a specific database).
+
+```js
+let SchemaFactory = require('zs-common-schema').SchemaFactory;
+let SchemaTypeDate = require('zs-common-schema').coreSchemaTypes.SchemaTypeDate;
+
+class YearSerializedDate extends SchemaTypeDate {
+
+	constructor() {
+		super();
+	}
+
+	normalize(value, subschema, field, options, schema) {
+		value = super.normalize(value, subschema, field, {}, schema);
+		if (options.serialize) {
+			return '' + value.getUTCYear();
+		} else {
+			return value;
+		}
+	}
+
+}
+
+let mySchemaFactory = new SchemaFactory();
+mySchemaFactory.registerType('date', new YearSerializedDate());
+let schema = mySchemaFactory.createSchema(...);
+```
+
