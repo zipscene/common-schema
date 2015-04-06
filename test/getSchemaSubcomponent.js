@@ -3,18 +3,18 @@ let createSchema = require('../lib').createSchema;
 let or = require('../lib').or;
 let map = require('../lib').map;
 
-describe('#getSchemaSubcomponent', function() {
+describe('#getFieldSubschema', function() {
 
 	it('object', function() {
 		let schema = createSchema({
 			foo: Number
 		});
-		expect(schema.getSchemaType(schema.getData()).getSchemaSubcomponent(
+		expect(schema.getSchemaType(schema.getData()).getFieldSubschema(
 			schema.getData(),
 			'foo',
 			schema
 		)).to.deep.equal( { type: 'number' } );
-		expect(schema.getSchemaType(schema.getData()).getSchemaSubcomponent(
+		expect(schema.getSchemaType(schema.getData()).getFieldSubschema(
 			schema.getData(),
 			'bar',
 			schema
@@ -23,12 +23,12 @@ describe('#getSchemaSubcomponent', function() {
 
 	it('array', function() {
 		let schema = createSchema([ Number ]);
-		expect(schema.getSchemaType(schema.getData()).getSchemaSubcomponent(
+		expect(schema.getSchemaType(schema.getData()).getFieldSubschema(
 			schema.getData(),
 			'17',
 			schema
 		)).to.deep.equal( { type: 'number' } );
-		expect(schema.getSchemaType(schema.getData()).getSchemaSubcomponent(
+		expect(schema.getSchemaType(schema.getData()).getFieldSubschema(
 			schema.getData(),
 			'length',
 			schema
@@ -37,7 +37,7 @@ describe('#getSchemaSubcomponent', function() {
 
 	it('map', function() {
 		let schema = createSchema(map(Number));
-		expect(schema.getSchemaType(schema.getData()).getSchemaSubcomponent(
+		expect(schema.getSchemaType(schema.getData()).getFieldSubschema(
 			schema.getData(),
 			'foo',
 			schema
@@ -46,17 +46,17 @@ describe('#getSchemaSubcomponent', function() {
 
 	it('or', function() {
 		let schema = createSchema(or(Number, { foo: Number }, { bar: String }));
-		expect(schema.getSchemaType(schema.getData()).getSchemaSubcomponent(
+		expect(schema.getSchemaType(schema.getData()).getFieldSubschema(
 			schema.getData(),
 			'foo',
 			schema
 		)).to.deep.equal( { type: 'number' } );
-		expect(schema.getSchemaType(schema.getData()).getSchemaSubcomponent(
+		expect(schema.getSchemaType(schema.getData()).getFieldSubschema(
 			schema.getData(),
 			'bar',
 			schema
 		)).to.deep.equal( { type: 'string' } );
-		expect(schema.getSchemaType(schema.getData()).getSchemaSubcomponent(
+		expect(schema.getSchemaType(schema.getData()).getFieldSubschema(
 			schema.getData(),
 			'baz',
 			schema
@@ -65,7 +65,7 @@ describe('#getSchemaSubcomponent', function() {
 
 	it('primitive', function() {
 		let schema = createSchema(Number);
-		expect(schema.getSchemaType(schema.getData()).getSchemaSubcomponent(
+		expect(schema.getSchemaType(schema.getData()).getFieldSubschema(
 			schema.getData(),
 			'foo',
 			schema
