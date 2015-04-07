@@ -33,6 +33,11 @@ describe('#getFieldSubschema', function() {
 			'length',
 			schema
 		)).to.deep.equal(undefined);
+		expect(schema.getSchemaType(schema.getData()).getFieldSubschema(
+			schema.getData(),
+			'$',
+			schema
+		)).to.deep.equal( { type: 'number' } );
 	});
 
 	it('map', function() {
