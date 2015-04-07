@@ -72,4 +72,13 @@ describe('#getFieldSubschema', function() {
 		)).to.deep.equal(undefined);
 	});
 
+	it('mixed', function() {
+		let schema = createSchema({ type: 'mixed' });
+		expect(schema.getSchemaType(schema.getData()).getFieldSubschema(
+			schema.getData(),
+			'foo',
+			schema
+		)).to.deep.equal({ type: 'mixed' });
+	});
+
 });
