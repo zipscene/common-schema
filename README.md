@@ -71,7 +71,7 @@ supplied in several formats.
 			properties: {
 				baz: {
 					type: 'array',
-					values: {
+					elements: {
 						type: 'number'
 					}
 				},
