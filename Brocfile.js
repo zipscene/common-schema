@@ -1,6 +1,6 @@
 var esTranspiler = require('broccoli-babel-transpiler');
 var pickFiles = require('broccoli-static-compiler');
-var wrapFiles = require('broccoli-wrap');
+var WrapFiles = require('broccoli-wrap');
 var mergeTrees = require('broccoli-merge-trees');
 var Promise = require('es6-promise').Promise;
 var fs = require('fs');
@@ -36,6 +36,8 @@ function getSourceTrees() {
 				});
 				return readTree(mergeTrees(pathTrees));
 			});
+		},
+		cleanup: function() {
 		}
 	};
 }
@@ -51,15 +53,33 @@ function addSourceMapSupport(tree) {
 		'!(function() {try{' +
 		'require("s"+"ource-map-support").install();' +
 		'}catch(e){}})();';
-	return wrapFiles(tree, {
+	return new WrapFiles(tree, {
 		wrapper: [ sourceMapString, '' ],
 		extensions: [ 'js' ]
 	});
+}
+
+function addBinShebang(tree) {
+	var shebangTree = new WrapFiles(tree, {
+		wrapper: [ '#!/usr/bin/env node\n', '' ],
+		extension: [ 'js' ]
+	});
+	shebangTree.processString = function(string, relativePath) {
+		// Ensure this file is in the bin folder
+		if (/^bin\//.test(relativePath)) {
+			// This is in the bin folder, run the wrapper
+			return WrapFiles.prototype.processString.call(this, string, relativePath);
+		} else {
+			return string;
+		}
+	};
+	return shebangTree;
 }
 
 
 var source = getSourceTrees();
 var sourceMapSupportTree = addSourceMapSupport(source);
 var transpiledTree = esTranspiler(sourceMapSupportTree);
+var shebangedTree = addBinShebang(transpiledTree);
 
-module.exports = transpiledTree;
+module.exports = shebangedTree;

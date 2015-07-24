@@ -1,6 +1,6 @@
 {
   "name": "zs-common-schema",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Schema-handling utilities, including schema validators and checkers.",
   "main": "./dist/lib/index.js",
   "repository": {
@@ -11,30 +11,26 @@
     "lint": "node ./node_modules/.bin/eslint . || exit 0",
     "docs": "node ./node_modules/.bin/yuidoc .",
     "test": "npm run-script build && node ./node_modules/.bin/mocha ./dist/test -R spec",
-    "build": "./node_modules/.bin/grunt build && rm -rf tmp",
-    "watch": "./node_modules/.bin/grunt watch && rm -rf tmp",
+    "build": "rm -rf dist && ./node_modules/.bin/broccoli build dist && rm -rf tmp",
     "prepublish": "npm run-script build && npm run-script docs"
   },
   "dependencies": {
-    "babel-runtime": "^5.0.9",
+    "babel-runtime": "5.8.3",
     "lodash": "^3.6.0",
     "pasync": "^0.2.0",
     "xerror": "^1.0.0",
     "zs-objtools": "^0.3.2"
   },
   "devDependencies": {
-    "broccoli": "^0.15.3",
-    "broccoli-babel-transpiler": "^5.0.0",
+    "broccoli": "^0.16.4",
+    "broccoli-babel-transpiler": "^5.3.1",
     "broccoli-cli": "^1.0.0",
-    "broccoli-merge-trees": "^0.2.1",
+    "broccoli-merge-trees": "^0.2.2",
     "broccoli-static-compiler": "^0.2.1",
     "broccoli-wrap": "0.0.2",
     "chai": "^2.2.0",
     "es6-promise": "^2.0.1",
     "eslint": "^0.18.0",
-    "grunt": "^0.4.5",
-    "grunt-broccoli": "^0.4.0",
-    "grunt-cli": "^0.1.13",
     "mocha": "^2.2.1",
     "source-map-support": "^0.2.10",
     "yuidocjs": "^0.6.0"

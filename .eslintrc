@@ -112,7 +112,7 @@
 		//"no-undef": 2,
 		"no-undef-init": 0,
 		"no-undefined": 0,
-		"no-unused-vars": [2, {"args": "none"}],
+		"no-unused-vars": 1,
 		"no-use-before-define": [2, "nofunc"],
 		"handle-callback-err": 0,
 		"no-mixed-required": 0,
