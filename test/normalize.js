@@ -338,6 +338,15 @@ describe('#normalize', function() {
 		expect(schema.normalize(obj)).to.equal(obj);
 	});
 
+	it('geopoint', function() {
+		let schema = createSchema('geopoint');
+		expect(schema.normalize([ -102, 78 ])).to.deep.equal([ -102, 78 ]);
+		expect(schema.normalize([ '-102', '78' ])).to.deep.equal([ -102, 78 ]);
+		expect(schema.normalize('-102,78')).to.deep.equal([ -102, 78 ]);
+		expect( () => schema.normalize([ -181, 78 ]) ).to.throw(ValidationError);
+		expect( () => schema.normalize(true) ).to.throw(ValidationError);
+	});
+
 	it('custom normalizer and validator', function() {
 		let schema = createSchema({
 			type: String,
