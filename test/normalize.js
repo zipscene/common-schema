@@ -347,6 +347,34 @@ describe('#normalize', function() {
 		expect( () => schema.normalize(true) ).to.throw(ValidationError);
 	});
 
+	it('geojson', function() {
+		let schema = createSchema('geojson');
+		expect(schema.normalize({
+			type: 'Point',
+			coordinates: [ '12', '12' ]
+		})).to.deep.equal({
+			type: 'Point',
+			coordinates: [ 12, 12 ]
+		});
+		expect(schema.normalize({
+			type: 'GeometryCollection',
+			geometries: [
+				{
+					type: 'Polygon',
+					coordinates: [ [ [ 12, 12 ], '13,13', [ 13, 12 ], [ 12, 12 ] ] ]
+				}
+			]
+		})).to.deep.equal({
+			type: 'GeometryCollection',
+			geometries: [
+				{
+					type: 'Polygon',
+					coordinates: [ [ [ 12, 12 ], [ 13, 13 ], [ 13, 12 ], [ 12, 12 ] ] ]
+				}
+			]
+		});
+	});
+
 	it('custom normalizer and validator', function() {
 		let schema = createSchema({
 			type: String,

@@ -26,7 +26,11 @@ describe('#validate', function() {
 				required: true
 			},
 			bam: String
-		})
+		}),
+		point: 'geopoint',
+		geojsons: [ { type: 'geojson', allowedTypes: [
+			'Point', 'LineString', 'Polygon', 'MultiPolygon', 'GeometryCollection'
+		] } ]
 	});
 
 	it('valid', function() {
@@ -57,7 +61,42 @@ describe('#validate', function() {
 			o: {
 				qux: 4,
 				bam: '7'
-			}
+			},
+			point: [ 23, 23 ],
+			geojsons: [
+				{
+					type: 'Point',
+					coordinates: [ 23, 23 ]
+				},
+				{
+					type: 'LineString',
+					coordinates: [ [ 23, 23 ], [ 33, 33 ], [ 44, 44 ] ]
+				},
+				{
+					type: 'Polygon',
+					coordinates: [ [ [ 23, 23 ], [ 33, 33 ], [ 33, 23 ], [ 23, 23 ] ] ]
+				},
+				{
+					type: 'MultiPolygon',
+					coordinates: [
+						[ [ [ 23, 23 ], [ 33, 33 ], [ 33, 23 ], [ 23, 23 ] ] ],
+						[ [ [ 23, 23 ], [ 33, 33 ], [ 33, 23 ], [ 23, 23 ] ] ]
+					]
+				},
+				{
+					type: 'GeometryCollection',
+					geometries: [
+						{
+							type: 'Point',
+							coordinates: [ 23, 23 ]
+						},
+						{
+							type: 'LineString',
+							coordinates: [ [ 23, 23 ], [ 33, 33 ], [ 44, 44 ] ]
+						}
+					]
+				}
+			]
 		})).to.equal(true);
 	});
 
@@ -102,6 +141,32 @@ describe('#validate', function() {
 				'field': 'o.qux',
 				'code': 'invalid_type',
 				'message': 'Must be a number'
+			},
+			{
+				'field': 'point',
+				'code': 'invalid_type',
+				'message': 'Must be array in form [ long, lat ]'
+			},
+			{
+				'field': 'geojsons.0',
+				'code': 'invalid_format',
+				'message': 'Latitude must be between -90 and 90'
+			},
+			{
+				'field': 'geojsons.2',
+				'code': 'invalid_format',
+				'message': 'Latitude must be between -90 and 90'
+			},
+			{
+				'field': 'geojsons.4',
+				'code': 'invalid_format',
+				'message': 'Latitude must be between -90 and 90'
+			},
+			{
+				'field': 'geojsons.5',
+				'code': 'invalid_type',
+				'message':
+					'GeoJSON object must have type Point, LineString, Polygon, MultiPolygon, GeometryCollection'
 			}
 		];
 
@@ -133,7 +198,46 @@ describe('#validate', function() {
 				o: {
 					qux: '4',
 					bam: '7'
-				}
+				},
+				point: 'foo',
+				geojsons: [
+					{
+						type: 'Point',
+						coordinates: [ 23, 230 ]
+					},
+					{
+						type: 'LineString',
+						coordinates: [ [ 23, 23 ], [ 33, 33 ], [ 44, 44 ] ]
+					},
+					{
+						type: 'Polygon',
+						coordinates: [ [ [ 23, 23 ], [ 33, 33 ], [ 33, 23 ], [ 23, 223 ] ] ]
+					},
+					{
+						type: 'MultiPolygon',
+						coordinates: [
+							[ [ [ 23, 23 ], [ 33, 33 ], [ 33, 23 ], [ 23, 23 ] ] ],
+							[ [ [ 23, 23 ], [ 33, 33 ], [ 33, 23 ], [ 23, 23 ] ] ]
+						]
+					},
+					{
+						type: 'GeometryCollection',
+						geometries: [
+							{
+								type: 'Point',
+								coordinates: [ 23, 23 ]
+							},
+							{
+								type: 'LineString',
+								coordinates: [ [ 23, 23 ], [ 33, 33 ], [ 44, 444 ] ]
+							}
+						]
+					},
+					{
+						type: 'MultiPoint',
+						coordinates: [ [ 23, 23 ], [ 33, 33 ], [ 44, 44 ] ]
+					}
+				]
 			});
 		} catch (ex) {
 			expect(ex instanceof ValidationError).to.equal(true);
