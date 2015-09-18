@@ -383,6 +383,7 @@ Functions are also provided for the following:
 
 See the `docs` directory for details.
 
+
 ## Custom Types
 
 All schemas are created by a `SchemaFactory` that maintains the set of allowed types in the
@@ -425,3 +426,14 @@ mySchemaFactory.registerType('date', new YearSerializedDate());
 let schema = mySchemaFactory.createSchema(...);
 ```
 
+## Miscellaneous methods
+
+You can use `Schema.isSchema` to test whether a given value is a schema instance.
+
+```javascript
+Schema.isSchema(createSchema({ foo: String }));
+// => true
+
+Schema.isSchema('bar');
+// => false
+```
