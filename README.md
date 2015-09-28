@@ -306,6 +306,15 @@ String schemas support these additional builtin validations:
 	match: /^[a-z]*$/
 }
 ```
+Instead of using `match`, you could also use `enum`:
+```js
+{
+	type: String,
+	minLength: 3,
+	maxLength: 10m
+	enum: [ 'abc', 'efg', 'hij' ]
+}
+```
 
 ### `"number"` / `Number`
 
@@ -317,7 +326,8 @@ and `max`.
 {
 	type: Number,
 	min: 0,
-	max: 100
+	max: 100,
+	enum: [ 23, 35, 40, 57 ]
 }
 ```
 
