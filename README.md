@@ -326,7 +326,13 @@ and `max`.
 {
 	type: Number,
 	min: 0,
-	max: 100,
+	max: 100
+}
+```
+Or use `enum`:
+```js
+{
+	type: Number,
 	enum: [ 23, 35, 40, 57 ]
 }
 ```
