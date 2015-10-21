@@ -47,6 +47,9 @@ describe('#traverseSchema', function() {
 				if (subschema.type === 'array') {
 					return false;
 				}
+				if (subschema.type === 'number') {
+					return 0;
+				}
 			}
 		});
 
