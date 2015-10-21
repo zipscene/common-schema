@@ -33,11 +33,13 @@ describe('#traverseSchema', function() {
 		let paths = [];
 
 		let schema = createSchema({
+			bat: {
+				num: Number
+			},
 			foo: [ {
 				bar: Number,
 				baz: String
-			} ],
-			bat: Number
+			} ]
 		});
 
 		schema.traverseSchema({
@@ -47,14 +49,14 @@ describe('#traverseSchema', function() {
 				if (subschema.type === 'array') {
 					return false;
 				}
-				if (subschema.type === 'number') {
+				if (subschema.type === 'object') {
 					return 0;
 				}
 			}
 		});
 
-		expect(types).to.deep.equal([ 'object', 'array', 'number' ]);
-		expect(paths).to.deep.equal([ '', 'foo', 'bat' ]);
+		expect(types).to.deep.equal([ 'object', 'object', 'number', 'array' ]);
+		expect(paths).to.deep.equal([ '', 'bat', 'bat.num', 'foo' ]);
 		done();
 	});
 
