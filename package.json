@@ -1,6 +1,6 @@
 {
   "name": "zs-common-schema",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": "Schema-handling utilities, including schema validators and checkers.",
   "main": "./dist/lib/index.js",
   "repository": {
@@ -19,7 +19,7 @@
     "lodash": "^3.6.0",
     "pasync": "^0.2.0",
     "xerror": "^1.0.0",
-    "zs-objtools": "^0.3.3"
+    "zs-objtools": "^1.2.0"
   },
   "devDependencies": {
     "broccoli": "^0.16.4",
