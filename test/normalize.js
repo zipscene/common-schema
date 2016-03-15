@@ -338,6 +338,28 @@ describe('#normalize', function() {
 		expect(schema.normalize(obj)).to.equal(obj);
 	});
 
+	it('mixed with serializeMixed', function() {
+		let schema = createSchema({
+			foo: Number,
+			bar: {
+				type: 'mixed',
+				serializeMixed: true
+			}
+		});
+		let obj = {
+			foo: 12,
+			bar: {
+				baz: 'abc'
+			}
+		};
+		let normalized = schema.normalize(obj, { serialize: true });
+		console.log(normalized);
+		expect(normalized).to.deep.equal({
+			foo: obj.foo,
+			bar: '{"baz":"abc"}'
+		});
+	});
+
 	it('geopoint', function() {
 		let schema = createSchema('geopoint');
 		expect(schema.normalize([ -102, 78 ])).to.deep.equal([ -102, 78 ]);
