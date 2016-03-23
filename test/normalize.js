@@ -296,7 +296,9 @@ describe('#normalize', function() {
 			type: Date,
 			min: new Date('2010-01-01T00:00:00Z'),
 			max: '2016-01-01T00:00:00Z',
-			default: Date.now
+			default: function() {
+				return new Date('2014-01-01T00:00:00Z');
+			}
 		});
 		expect(schema.normalize(new Date('2014-01-01T00:00:00Z')).getTime())
 			.to.equal(new Date('2014-01-01T00:00:00Z').getTime());
@@ -305,11 +307,9 @@ describe('#normalize', function() {
 		expect(schema.normalize('2014-01-01T00:00:00Z').getTime())
 			.to.equal(new Date('2014-01-01T00:00:00Z').getTime());
 		expect(schema.normalize(undefined).getTime())
-			.be.within(new Date().getTime() - 1000, new Date().getTime() + 1000);
+			.to.equal(new Date('2014-01-01T00:00:00Z').getTime());
 		expect(() => schema.normalize('2009-01-01T00:00:00Z')).to.throw(ValidationError);
 		expect(() => schema.normalize('2017-01-01T00:00:00Z')).to.throw(ValidationError);
-		expect(schema.serialize('2014-01-01T00:00:00Z'))
-			.to.equal('2014-01-01T00:00:00.000Z');
 	});
 
 	it('binary', function() {
