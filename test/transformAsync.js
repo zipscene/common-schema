@@ -87,7 +87,7 @@ describe('#transformAsync', function() {
 			onField(field, value) {
 				return new Promise(function(resolve) {
 					setTimeout(function() {
-						if (_.isString(value)) {
+						if (typeof value === 'string') {
 							value = 'a' + value;
 						} else if (_.isNumber(value)) {
 							value = value + 1;
@@ -102,7 +102,7 @@ describe('#transformAsync', function() {
 			onUnknownField(field, value) {
 				return new Promise(function(resolve) {
 					setTimeout(function() {
-						if (_.isString(value)) {
+						if (typeof value === 'string') {
 							value = 'b' + value;
 						} else if (_.isNumber(value)) {
 							value = value + 2;
@@ -117,7 +117,7 @@ describe('#transformAsync', function() {
 			postField(field, value) {
 				return new Promise(function(resolve) {
 					setTimeout(function() {
-						if (_.isString(value)) {
+						if (typeof value === 'string') {
 							value = 'c' + value;
 						} else if (_.isNumber(value)) {
 							value = value + 4;

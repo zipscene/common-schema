@@ -353,7 +353,6 @@ describe('#normalize', function() {
 			}
 		};
 		let normalized = schema.normalize(obj, { serialize: true });
-		console.log(normalized);
 		expect(normalized).to.deep.equal({
 			foo: obj.foo,
 			bar: '{"baz":"abc"}'
