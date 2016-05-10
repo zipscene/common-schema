@@ -413,4 +413,25 @@ describe('#normalize', function() {
 		expect( () => schema.normalize('foo') ).to.throw('Test validator');
 	});
 
+	it('custom normalizer with regex', function() {
+		let schema = createSchema({
+			foo: {
+				type: String,
+				match: /^[a-z]{2,2}$/,
+				normalize(value) {
+					if (value && typeof value.toLowerCase === 'function') {
+						return value.toLowerCase();
+					} else {
+						throw new Error('Not a string');
+					}
+				}
+			}
+		});
+		let obj = {
+			foo: 'US'
+		};
+		obj = schema.normalize(obj);
+		expect(obj.foo).to.equal('us');
+	});
+
 });
