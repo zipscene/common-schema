@@ -1,6 +1,6 @@
 {
   "name": "zs-common-schema",
-  "version": "1.7.10",
+  "version": "1.7.11",
   "description": "Schema-handling utilities, including schema validators and checkers.",
   "main": "./dist/lib/index.js",
   "repository": {
