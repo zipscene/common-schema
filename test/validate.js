@@ -1,12 +1,11 @@
-let expect = require('chai').expect;
-let createSchema = require('../lib').createSchema;
-let ValidationError = require('../lib').ValidationError;
-let Mixed = require('../lib').Mixed;
-let or = require('../lib').or;
-let map = require('../lib').map;
+const { expect } = require('chai');
+const { createSchema } = require('../lib');
+const { ValidationError } = require('../lib');
+const { Mixed } = require('../lib');
+const { or } = require('../lib');
+const { map } = require('../lib');
 
 describe('#validate', function() {
-
 	const schema = createSchema({
 		foo: {
 			bar: String,
@@ -246,5 +245,170 @@ describe('#validate', function() {
 		}
 		throw new Error('Should not reach');
 	});
+});
 
+describe('#isValid', function() {
+	const schema = createSchema({
+		foo: {
+			bar: String,
+			baz: Number
+		},
+		miss: Date,
+		arr: [ {
+			zip: Date
+		} ],
+		map: map(Number),
+		bin: Buffer,
+		boo: Boolean,
+		mix: Mixed,
+		o: or({}, Number, String, {
+			qux: {
+				type: Number,
+				required: true
+			},
+			bam: String
+		}),
+		point: 'geopoint',
+		geojsons: [ { type: 'geojson', allowedTypes: [
+			'Point', 'LineString', 'Polygon', 'MultiPolygon', 'GeometryCollection'
+		] } ]
+	});
+
+	it('valid', function() {
+		expect(schema.isValid({
+			foo: {
+				bar: '8',
+				baz: 8
+			},
+			arr: [
+				{
+					zip: new Date('2014-01-01T00:00:00Z')
+				},
+				{
+					zip: new Date(1427982068722)
+				},
+				{
+					zip: new Date()
+				},
+				{}
+			],
+			map: {
+				foo: 2,
+				bar: 4
+			},
+			bin: new Buffer('YXNkZg==', 'base64'),
+			boo: true,
+			mix: { a: [ function() {} ], b: 5 },
+			o: {
+				qux: 4,
+				bam: '7'
+			},
+			point: [ 23, 23 ],
+			geojsons: [
+				{
+					type: 'Point',
+					coordinates: [ 23, 23 ]
+				},
+				{
+					type: 'LineString',
+					coordinates: [ [ 23, 23 ], [ 33, 33 ], [ 44, 44 ] ]
+				},
+				{
+					type: 'Polygon',
+					coordinates: [ [ [ 23, 23 ], [ 33, 33 ], [ 33, 23 ], [ 23, 23 ] ] ]
+				},
+				{
+					type: 'MultiPolygon',
+					coordinates: [
+						[ [ [ 23, 23 ], [ 33, 33 ], [ 33, 23 ], [ 23, 23 ] ] ],
+						[ [ [ 23, 23 ], [ 33, 33 ], [ 33, 23 ], [ 23, 23 ] ] ]
+					]
+				},
+				{
+					type: 'GeometryCollection',
+					geometries: [
+						{
+							type: 'Point',
+							coordinates: [ 23, 23 ]
+						},
+						{
+							type: 'LineString',
+							coordinates: [ [ 23, 23 ], [ 33, 33 ], [ 44, 44 ] ]
+						}
+					]
+				}
+			]
+		})).to.equal(true);
+	});
+
+	it('invalid', function() {
+		expect(schema.isValid({
+			foo: {
+				bar: 8,
+				baz: '8'
+			},
+			arr: [
+				{
+					zip: '2014-01-01T00:00:00Z'
+				},
+				{
+					zip: 1427982068722
+				},
+				{
+					zip: new Date()
+				},
+				{}
+			],
+			map: {
+				foo: 2,
+				bar: '4'
+			},
+			bin: 'YXNkZg==',
+			boo: 'yes',
+			mix: { a: [ function() {} ] },
+			o: {
+				qux: '4',
+				bam: '7'
+			},
+			point: 'foo',
+			geojsons: [
+				{
+					type: 'Point',
+					coordinates: [ 23, 230 ]
+				},
+				{
+					type: 'LineString',
+					coordinates: [ [ 23, 23 ], [ 33, 33 ], [ 44, 44 ] ]
+				},
+				{
+					type: 'Polygon',
+					coordinates: [ [ [ 23, 23 ], [ 33, 33 ], [ 33, 23 ], [ 23, 223 ] ] ]
+				},
+				{
+					type: 'MultiPolygon',
+					coordinates: [
+						[ [ [ 23, 23 ], [ 33, 33 ], [ 33, 23 ], [ 23, 23 ] ] ],
+						[ [ [ 23, 23 ], [ 33, 33 ], [ 33, 23 ], [ 23, 23 ] ] ]
+					]
+				},
+				{
+					type: 'GeometryCollection',
+					geometries: [
+						{
+							type: 'Point',
+							coordinates: [ 23, 23 ]
+						},
+						{
+							type: 'LineString',
+							coordinates: [ [ 23, 23 ], [ 33, 33 ], [ 44, 444 ] ]
+						}
+					]
+				},
+				{
+					type: 'MultiPoint',
+					coordinates: [ [ 23, 23 ], [ 33, 33 ], [ 44, 44 ] ]
+				}
+			]
+		})).to.equal(false);
+	});
 });
