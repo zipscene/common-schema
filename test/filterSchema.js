@@ -32,6 +32,9 @@ describe('#filterSchema', function() {
 							type: 'string'
 						}
 					}
+				},
+				baz: {
+					type: 'string'
 				}
 			}
 		});
@@ -48,7 +51,8 @@ describe('#filterSchema', function() {
 						include: true
 					},
 					baz: {
-						type: String
+						type: String,
+						include: false
 					}
 				}
 			},
@@ -58,7 +62,8 @@ describe('#filterSchema', function() {
 					include: true
 				},
 				ech: {
-					type: String
+					type: String,
+					include: false
 				}
 			}
 		});
@@ -70,6 +75,7 @@ describe('#filterSchema', function() {
 			properties: {
 				foo: {
 					type: 'object',
+					include: null,
 					properties: {
 						bar: {
 							type: 'string',
@@ -84,6 +90,59 @@ describe('#filterSchema', function() {
 							type: 'string',
 							include: true
 						}
+					}
+				}
+			}
+		});
+	});
+
+	it('includes nodes that return null or undefined, minus falsey child nodes', function() {
+		let schema = createSchema({
+			foo: {
+				type: 'object',
+				properties: {
+					bar: {
+						type: 'string',
+						include: true
+					},
+					baz: {
+						type: 'string',
+						include: false
+					},
+					bazizzle: {
+						type: 'string'
+					}
+				}
+			},
+			qux: {
+				type: 'array',
+				elements: {
+					type: 'number'
+				}
+			}
+		});
+		let filtered = schema.filterSchema((subschema) => {
+			return subschema.include;
+		});
+		expect(filtered.getData()).to.deep.equal({
+			type: 'object',
+			properties: {
+				foo: {
+					type: 'object',
+					properties: {
+						bar: {
+							type: 'string',
+							include: true
+						},
+						bazizzle: {
+							type: 'string'
+						}
+					}
+				},
+				qux: {
+					type: 'array',
+					elements: {
+						type: 'number'
 					}
 				}
 			}
@@ -131,7 +190,8 @@ describe('#filterSchema', function() {
 				include: true
 			},
 			bar: {
-				type: String
+				type: String,
+				include: false
 			}
 		} ]);
 
@@ -159,7 +219,8 @@ describe('#filterSchema', function() {
 					include: true
 				},
 				baz: {
-					type: String
+					type: String,
+					include: false
 				},
 				qux: [
 					{
@@ -169,9 +230,6 @@ describe('#filterSchema', function() {
 						}
 					}
 				]
-			} ],
-			ech: [ {
-				type: String
 			} ]
 		});
 
