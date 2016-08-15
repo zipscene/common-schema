@@ -149,6 +149,8 @@ Modification is done in-place as much as possible, and `schema.normalize()` retu
 the result.  This will throw if it cannot coerce a value.
 
 Both methods will throw `ValidationError` on error.
+For situations in which this is undesirable,
+`schema.isValid(value)` will return a `Boolean` rather than throwing an error.
 
 ### Validation Errors
 
