@@ -1,12 +1,17 @@
 {
-  "name": "zs-common-schema",
+  "name": "common-schema",
   "version": "1.8.0",
   "description": "Schema-handling utilities, including schema validators and checkers.",
   "main": "./dist/lib/index.js",
   "repository": {
     "type": "git",
-    "url": "git@git.zipscene.com:zsapilibs/zs-common-schema.git"
+    "url": "https://github.com/zipscene/common-schema.git"
   },
+  "keywords": [
+    "schema",
+    "normalize",
+    "validate"
+  ],
   "scripts": {
     "lint": "node ./node_modules/.bin/eslint . || exit 0",
     "docs": "node ./node_modules/.bin/yuidoc .",
@@ -19,7 +24,7 @@
     "lodash": "^3.6.0",
     "pasync": "^0.2.0",
     "xerror": "^1.0.0",
-    "zs-objtools": "^1.6.2"
+    "objtools": "^1.6.2"
   },
   "devDependencies": {
     "broccoli": "^0.16.4",
@@ -35,7 +40,5 @@
     "source-map-support": "^0.2.10",
     "yuidocjs": "^0.6.0"
   },
-  "publishConfig": {
-    "registry": "https://npm.zipscene.com/"
-  }
+  "license": "Apache-2.0"
 }

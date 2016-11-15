@@ -1,4 +1,4 @@
-# zs-common-schema
+# common-schema
 
 `common-schema` provides a framework for handling schemas for data formats, and validating,
 processing, and normalizing objects based on those schemas.
@@ -9,7 +9,7 @@ available in the `docs` directory.
 ## Example
 
 ```js
-let createSchema = require('zs-common-schema').createSchema;
+let createSchema = require('common-schema').createSchema;
 
 let schema = createSchema({
 	foo: String,
@@ -155,7 +155,7 @@ For situations in which this is undesirable,
 ### Validation Errors
 
 `validate()` and `normalize()` throw a `ValidationError` (which can be accessed on
-`require('zs-common-schema').ValidationError`)
+`require('common-schema').ValidationError`)
 on failure.  A `ValidationError` looks like this (and inherits from XError and Error):
 
 ```js
@@ -266,7 +266,7 @@ createSchema({
 	}
 })
 // Shorthand
-let map = require('zs-common-schema').map;
+let map = require('common-schema').map;
 createSchema({
 	// required field foo that's a map from strings to numbers
 	foo: map({
@@ -281,7 +281,7 @@ Special type of subschema that can match one of two or more alternative subschem
 to match a string, a number, or an object containing a string "bar":
 
 ```js
-let or = require('zs-common-schema').or;
+let or = require('common-schema').or;
 createSchema({
 	foo: or({
 		required: true
@@ -360,7 +360,7 @@ Will coerce the following: "yes"/"no", "true"/"false", "t"/"f", "yes"/"no", "y"/
 Wildcard type; can be anything.  Use like this:
 
 ```js
-let Mixed = require('zs-common-schema').Mixed;
+let Mixed = require('common-schema').Mixed;
 createSchema({
 	foo: Mixed
 })
@@ -419,8 +419,8 @@ You can also use this process to override or extend existing types (for example,
 normalize a type into a different format for a specific database).
 
 ```js
-let SchemaFactory = require('zs-common-schema').SchemaFactory;
-let SchemaTypeDate = require('zs-common-schema').coreSchemaTypes.SchemaTypeDate;
+let SchemaFactory = require('common-schema').SchemaFactory;
+let SchemaTypeDate = require('common-schema').coreSchemaTypes.SchemaTypeDate;
 
 class YearSerializedDate extends SchemaTypeDate {
 
