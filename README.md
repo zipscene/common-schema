@@ -183,7 +183,7 @@ are standard:
 
 - `invalid_type` - If the field is the wrong type
 - `invalid_format` - If the format of a string field does not match a regex or validation routine;
-  details may optionally include a `regex` field.
+	details may optionally include a `regex` field.
 - `required` - If a required field is missing
 - `duplicate` - If a field required to be unique has a duplicate value
 - `invalid` - Generic error code
