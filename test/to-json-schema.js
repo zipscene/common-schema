@@ -28,13 +28,25 @@ describe('#toJSONSchema', function() {
 			bip: Boolean,
 			zip: 'mixed',
 			zap: 'geopoint',
-			map: map(Number),
+			map: {
+				type: 'map',
+				values: {
+					map2: map(Number)
+				}
+			},
 			o: or({}, Number, String, {
 				qux: {
 					type: Number,
 					required: true
 				},
-				bam: String
+				bam: String,
+				o2: or({}, Number, String, {
+					qux: {
+						type: Number,
+						required: true
+					},
+					bam: String
+				})
 			})
 		};
 		const jsonSchema = {
@@ -98,7 +110,15 @@ describe('#toJSONSchema', function() {
 				map: {
 					type: 'object',
 					'properties': {
-						type: 'number'
+						type: 'object',
+						properties: {
+							map2: {
+								type: 'object',
+								properties: {
+									type: 'number'
+								}
+							}
+						}
 					}
 				},
 				o: {
@@ -113,13 +133,35 @@ describe('#toJSONSchema', function() {
 							'type': 'object',
 							properties: {
 								qux: {
-									type: 'number',
-									required: true
+									type: 'number'
 								},
 								bam: {
 									type: 'string'
+								},
+								o2: {
+									anyOf: [
+										{
+											type: 'number'
+										},
+										{
+											type: 'string'
+										},
+										{
+											'type': 'object',
+											properties: {
+												qux: {
+													type: 'number'
+												},
+												bam: {
+													type: 'string'
+												}
+											},
+											required: [ 'qux' ]
+										}
+									]
 								}
-							}
+							},
+							required: [ 'qux' ]
 						}
 					]
 				}
