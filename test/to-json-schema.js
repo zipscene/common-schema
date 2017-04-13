@@ -1,5 +1,7 @@
 const expect = require('chai').expect;
 const createSchema = require('../lib').createSchema;
+let or = require('../lib').or;
+let map = require('../lib').map;
 
 describe('#toJSONSchema', function() {
 
@@ -25,7 +27,15 @@ describe('#toJSONSchema', function() {
 			beep: Date,
 			bip: Boolean,
 			zip: 'mixed',
-			zap: 'geopoint'
+			zap: 'geopoint',
+			map: map(Number),
+			o: or({}, Number, String, {
+				qux: {
+					type: Number,
+					required: true
+				},
+				bam: String
+			})
 		};
 		const jsonSchema = {
 			type: 'object',
@@ -84,7 +94,36 @@ describe('#toJSONSchema', function() {
 					minItems: 2,
 					maxItems: 2,
 					description: 'Longitude, Latitude'
+				},
+				map: {
+					type: 'object',
+					'properties': {
+						type: 'number'
+					}
+				},
+				o: {
+					anyOf: [
+						{
+							type: 'number'
+						},
+						{
+							type: 'string'
+						},
+						{
+							'type': 'object',
+							properties: {
+								qux: {
+									type: 'number',
+									required: true
+								},
+								bam: {
+									type: 'string'
+								}
+							}
+						}
+					]
 				}
+
 			}
 		};
 		let schema = createSchema(commonSchema);
