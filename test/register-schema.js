@@ -7,7 +7,7 @@ let { createSchema, defaultSchemaFactory } = require('../lib');
 
 describe('#registerSchema', function() {
 
-	it('Should register a schema', function() {
+	it('should register a schema', function() {
 		let Foo = createSchema({
 			bars: [ {
 				biz: Number,
