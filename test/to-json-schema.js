@@ -170,7 +170,6 @@ describe('#toJSONSchema', function() {
 		};
 		let schema = createSchema(commonSchema);
 		let converted = schema.toJSONSchema();
-		console.log(JSON.stringify(converted, null, '\t'));
 		expect(converted).to.deep.equal(jsonSchema);
 	});
 
