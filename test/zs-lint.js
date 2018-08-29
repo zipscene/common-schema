@@ -25,8 +25,8 @@ describe('Linter', function() {
 			done();
 		}
 
-		let lintProc = spawn('node', [ __dirname + '/../../node_modules/.bin/eslint', '.' ], {
-			cwd: __dirname + '/../..'
+		let lintProc = spawn('node', [ __dirname + '/../node_modules/.bin/eslint', '.' ], {
+			cwd: __dirname + '/..'
 		});
 
 		lintProc.on('error', function(error) {
