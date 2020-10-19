@@ -1,6 +1,6 @@
 {
   "name": "common-schema",
-  "version": "2.0.2",
+  "version": "3.0.0",
   "description": "Schema-handling utilities, including schema validators and checkers.",
   "main": "./lib/index.js",
   "repository": {
@@ -14,24 +14,21 @@
   ],
   "scripts": {
     "lint": "node ./node_modules/.bin/eslint . || exit 0",
-    "docs": "node ./node_modules/.bin/yuidoc .",
-    "test": "node ./node_modules/.bin/mocha ./test -R spec",
-    "prepublishOnly": "npm run-script docs"
+    "test": "node ./node_modules/.bin/mocha ./test -R spec"
   },
   "dependencies": {
-    "lodash": "^4.17.10",
-    "objtools": "^2.0.0",
-    "pasync": "^1.5.0",
-    "xerror": "^1.1.2"
+    "lodash": "^4.17.20",
+    "objtools": "^3.0.0",
+    "pasync": "^2.0.1",
+    "xerror": "^2.0.0"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "eslint": "^5.5.0",
-    "mocha": "^5.2.0",
-    "yuidocjs": "^0.10.2"
+    "chai": "^4.2.0",
+    "eslint": "^7.7.0",
+    "mocha": "^8.1.1"
   },
   "license": "Apache-2.0",
   "engines": {
-    "node": ">= 8.0.0"
+    "node": ">= 14.0.0"
   }
 }
